@@ -24,7 +24,8 @@ html {
 }
 
 h1 {
-  margin-top: 0;
+  margin: auto;
+  text-align: center
 }
 
 #msg {
@@ -125,6 +126,14 @@ button:active {
             <input type="radio" name="pType" value="Time" >Time</input>
         </div>
 
+
+        <div class="option">
+            <label for="pitch">&nbsp;</label>
+            <input type="radio" name="pType" value="LetterAndNumber" >Letter and Number</input>
+            <input type="radio" name="pType" value="SpellingLetters" >Spelling Letters</input>
+            <input type="radio" name="pType" value="SpellingNumbers" >Spelling Numbers</input>
+        </div>
+
 	<button id="speak">Speak</button>
 
 </div>
@@ -202,8 +211,23 @@ function speak(text) {
   // Create a new instance of SpeechSynthesisUtterance.
 	var msg = new SpeechSynthesisUtterance();
   
+    switch($("input[name='pType']:checked").val()){
+        case "LetterAndNumber":
+        case "SpellingLetters":
+        msg.text = text.split("");
+        break;
+        case "SpellingNumbers":
+        debugger;
+        msg.text = text.split('').join(' ');
+        default:
+        msg.text = text;
+        break;
+        
+
+    }
+  
   // Set the text.
-	msg.text = text;
+  	
   
   // Set the attributes.
 	msg.volume = parseFloat(volumeInput.value);
@@ -224,6 +248,7 @@ function speak(text) {
 // Set up an event listener for when the 'speak' button is clicked.
 button.addEventListener('click', function(e) {
     $('#pAnswer').hide();
+    $("#speech-msg").val('').focus();
     speechMsgInput = createAnswer().toString();
     $('#pAnswer').text(speechMsgInput);
 	if (speechMsgInput.length > 0) {
@@ -242,7 +267,6 @@ button.addEventListener('click', function(e) {
   })
 
   function createAnswer(){
-      debugger; 
       switch($("input[name='pType']:checked").val())
       {
             case "Number":
@@ -254,13 +278,24 @@ button.addEventListener('click', function(e) {
               return formatDate(getRandomDate(from , to))
             break;
             case "Time":
-              debugger;
               var from = new Date(1900, 01, 01);
               var to = new Date();
               var sas = getRandomDate(from , to);
               return ("0" + sas.getHours()).slice(-2)   + ":" + ("0" + sas.getMinutes()).slice(-2);
-             
             break;
+            case "LetterAndNumber":
+             var letterAndNumber = makeLetterAndNumber(8, 'LetterAndNumber');
+             return letterAndNumber;
+            break;
+            case "SpellingLetters":
+              var letterAndNumber = makeLetterAndNumber(8, 'Letter');
+              return letterAndNumber;
+            break;
+            case "SpellingNumbers":
+              var letterAndNumber = makeLetterAndNumber(8, 'Number');
+              return letterAndNumber;
+            break;
+
       }
   }
 
@@ -283,6 +318,28 @@ button.addEventListener('click', function(e) {
   var year = date.getFullYear();
 
   return day + ' ' + monthNames[monthIndex] + ' ' + year;
+}
+
+function makeLetterAndNumber(length , type) {
+  switch(type){
+    case "LetterAndNumber":
+      var characters       = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    break;
+    case "Letter":
+      var characters       = 'abcdefghijklmnopqrstuvwxyz';
+    break;
+    case "Number":
+      var characters       = '0123456789';
+    break;
+  }
+
+   var result           = '';
+   
+   var charactersLength = characters.length;
+   for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+   }
+   return result;
 }
 
 
