@@ -99,12 +99,8 @@ button:active {
 </head>
 <body>
     <div class="page-wrapper">
-  <h1>Web Speech Synthesis Demo</h1>
+  <h1>♉️♾♊️</h1>
   
-  <p id="msg">dsds</p>
-
-  
-
 	<div class="option">
 		<label for="voice">Voice</label>
 		<select name="voice" id="voice"></select>
@@ -237,7 +233,7 @@ button.addEventListener('click', function(e) {
   });
 
   answerBtn.addEventListener('click', function(e) {
-      debugger;
+      
     if($("#speech-msg").val() == $('#pAnswer').text())
             $('#pAnswer').css('color' , 'green')
         else
@@ -246,17 +242,49 @@ button.addEventListener('click', function(e) {
   })
 
   function createAnswer(){
+      debugger; 
       switch($("input[name='pType']:checked").val())
       {
             case "Number":
                return Math.floor((Math.random() * 100000) + 1);
             break;
             case "Date":
-
+              var from = new Date(1900, 01, 01);
+              var to = new Date();
+              return formatDate(getRandomDate(from , to))
             break;
             case "Time":
+              debugger;
+              var from = new Date(1900, 01, 01);
+              var to = new Date();
+              var sas = getRandomDate(from , to);
+              return ("0" + sas.getHours()).slice(-2)   + ":" + ("0" + sas.getMinutes()).slice(-2);
+             
             break;
       }
   }
+
+  function getRandomDate(from, to) {
+    from = from.getTime();
+    to = to.getTime();
+    return new Date(from + Math.random() * (to - from));
+  }
+
+  function formatDate(date) {
+  var monthNames = [
+    "January", "February", "March",
+    "April", "May", "June", "July",
+    "August", "September", "October",
+    "November", "December"
+  ];
+
+  var day = date.getDate();
+  var monthIndex = date.getMonth();
+  var year = date.getFullYear();
+
+  return day + ' ' + monthNames[monthIndex] + ' ' + year;
+}
+
+
 </script>
 </body>
